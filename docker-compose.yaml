@@ -6,6 +6,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DATABASE_LOGIN}
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DATABASE_NAME}
     volumes:
       - ./database_dump:/data/db
   database-panel:
@@ -30,8 +31,9 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE: mongodb://${DATABASE_LOGIN}:${DATABASE_PASSWORD}@mongo:27017
+      DATABASE: mongodb://${DATABASE_LOGIN}:${DATABASE_PASSWORD}@database:27017/
       PORT: ${BACKEND_PORT}
+      SECRET_KEY: "${SECRET_KEY}"
   frontend:
     image: node:22.12.0
     ports:

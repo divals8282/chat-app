@@ -1,13 +1,24 @@
+import httpServer from "node:http";
 import express from "express";
+import mongoose from "mongoose";
+import { socket } from "./socket";
+import { restApi } from "./rest-api";
 
 const application = express();
+const server = httpServer.createServer(application);
+application.use(express.json());
+socket(server);
+restApi(application);
 
-application.get("/", (request, response) => {
-  response.status(200).json({
-    message: "ExpressJS Server is running",
+mongoose
+  .connect(process.env.DATABASE as string)
+  .then(() => {
+    console.log("Database connected");
+  })
+  .catch((error) => {
+    console.error("Database connection error:", error);
   });
-});
 
-application.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+server.listen(process.env.PORT, () => {
+  console.log(`http server is running on port ${process.env.PORT}`);
 });
