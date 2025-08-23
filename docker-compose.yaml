@@ -1,0 +1,46 @@
+services:
+  database:
+    image: mongo:8.0
+    ports:
+      - ${DATABASE_PORT}:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_LOGIN}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./database_dump:/data/db
+  database-panel:
+    image: mongo-express
+    ports:
+      - ${DATABASE_PANEL_PORT}:8081
+    depends_on:
+      - database
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${DATABASE_LOGIN}:${DATABASE_PASSWORD}@database:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: ${DATABASE_LOGIN}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${DATABASE_PASSWORD}
+  backend:
+    image: node:22.12.0
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - database
+    environment:
+      DATABASE: mongodb://${DATABASE_LOGIN}:${DATABASE_PASSWORD}@mongo:27017
+      PORT: ${BACKEND_PORT}
+  frontend:
+    image: node:22.12.0
+    ports:
+      - ${FRONTEND_PORT}:3000
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      VITE_BACKEND_URL: http://localhost:${BACKEND_PORT}
+    depends_on:
+      - backend
