@@ -49,10 +49,6 @@ export const socket = (server: http.Server) => {
             const { valid } = decodeJWT(
               currentSocket.handshake.auth.token as string
             );
-            console.log({
-              valid,
-              token: currentSocket.handshake.auth.token,
-            });
             if (valid) {
               currentSocket.emit("auth/messages", messages);
             } else {
