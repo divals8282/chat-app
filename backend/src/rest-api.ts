@@ -28,7 +28,7 @@ export const restApi = (application: Express) => {
       const result = validationResult(request);
 
       if (!result.isEmpty()) {
-        return response.json({ errors: result.array() });
+        return response.status(409).json({ errors: result.array() });
       }
 
       const { email, password, nickname } = request.body;
@@ -61,7 +61,7 @@ export const restApi = (application: Express) => {
       const result = validationResult(request);
 
       if (!result.isEmpty()) {
-        return response.json({ errors: result.array() });
+        return response.status(409).json({ errors: result.array() });
       }
 
       const { email, password } = request.body;
@@ -92,7 +92,7 @@ export const restApi = (application: Express) => {
           email: isUserExists.email,
         },
         process.env.SECRET_KEY as string,
-        { expiresIn: "1m" }
+        { expiresIn: "10s" }
       );
 
       const refreshToken = jwt.sign(
@@ -126,7 +126,7 @@ export const restApi = (application: Express) => {
       const result = validationResult(request);
 
       if (!result.isEmpty()) {
-        return response.json({ errors: result.array() });
+        return response.status(409).json({ errors: result.array() });
       }
 
       const { refreshToken } = request.body;
@@ -149,7 +149,7 @@ export const restApi = (application: Express) => {
             email: user.email,
           },
           process.env.SECRET_KEY as string,
-          { expiresIn: "1m" }
+          { expiresIn: "10s" }
         );
 
         const newRefreshToken = jwt.sign(

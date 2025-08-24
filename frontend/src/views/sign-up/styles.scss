@@ -1,0 +1,16 @@
+.sign-in-view {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    div {
+      display: flex;
+      flex-direction: column;
+      label {
+        margin-bottom: 5px;
+      }
+    }
+    button {
+    }
+  }
+}

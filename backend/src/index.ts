@@ -3,10 +3,11 @@ import express from "express";
 import mongoose from "mongoose";
 import { socket } from "./socket";
 import { restApi } from "./rest-api";
-
+import cors from "cors";
 const application = express();
 const server = httpServer.createServer(application);
 application.use(express.json());
+application.use(cors());
 socket(server);
 restApi(application);
 

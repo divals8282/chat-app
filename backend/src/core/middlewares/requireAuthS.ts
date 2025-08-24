@@ -5,7 +5,7 @@ export const requireAuthS = (
   socket: Socket,
   next: (userInfo: DecodedTokenI) => void
 ) => {
-  const currentToken = socket.handshake.headers.authorization;
+  const currentToken = socket.handshake.auth.token;
   const tokenValidityResult = decodeJWT(currentToken as string);
 
   if (!tokenValidityResult.valid) {
